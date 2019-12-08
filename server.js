@@ -6,33 +6,50 @@ var port = 80;
 var host = 'localhost';
 
 const defs = {
-	css : 'body{'+
-	'margin:0;'+
-	'padding:0;'+
-	'text-align:center;} '+
-	'h1{'+
-	'background-color:#43853d;'+
-	'color:white;'+
-	'padding: .5em;'+
-	'font-family:"Consolas";}',
+	css : `body{
+	margin:0;
+	padding:0;
+	text-align:center;} 
+	h1{
+	background-color:#43853d;
+	color:white;
+	padding: .5em;
+	font-family:"Consolas";}`,
 
- 	htm:'<!DOCTYPE html>'+
-	'<html>'+
-	'<head>'+
-	'<meta charset="UTF-8">'+
-	'<title>Первый сервер</title>'+
-	'<link rel="stylesheet" href="app.css">'+
-	'</head>'+
-	'<body>'+
-	'<h1>Основы node js</h1>'+
-	'<button id="but01">Нажать</button>'+
-	'<script src="app.js"></script>'+
-	'</body>'+
-	'</html>',
+ 	htm:`<!DOCTYPE html>
+	<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>Первый сервер</title>
+	<link rel="stylesheet" href="app.css">
+	</head>
+	<body>
+	<h1>Основы node js</h1>
+	<button id="but01">Нажать</button>
+	<script src="app.js"></script>
+	</body>
+	</html>`,
 
-	js:'const but01=document.getElementById("but01");'+
-	'but01.onclick=function(){'+
-	'alert("Жесть")}'
+	js:`const but01=document.getElementById("but01");
+	but01.onclick=function(){
+	alert("Жесть")}`
+}
+
+function getRandomInt(min,max){
+	if(min>max){
+		var buf=min;
+		min=max;
+		max=buf;
+	}
+	return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getRandomIntArr(n,min,max){
+	var result=[];
+	for(let i=0;i<n;i++){
+		result.push(getRandomInt(min,max));
+	}
+	return result;
 }
 
 server.on('request',function(request,response){
@@ -136,7 +153,39 @@ ios.sockets.on('connection', function(socket) {
 		}catch{
 			err="Can't write file.";
 		}
+		socket.emit("wrClient",{"err":err,"filename":data6.filename});
 	});
+
+	//задача file7 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
+	socket.on("file7Server",function(data7){
+		try{
+			//преобразовать в JSON и записать в файл на сервере
+			fs.writeFileSync(__dirname+'/files/'+data7.filename, JSON.stringify(getRandomIntArr(getRandomInt(5,50),-50,50)));
+			err="";
+			console.log("Write file "+data7.filename);
+		}catch{
+			err="Can't write file.";
+		}
+		socket.emit("wrClient",{"err":err,"filename":data7.filename});
+		try{
+			//прочитать файл JSON с сервера и преобразовать в масив
+			var buf7=JSON.parse( fs.readFileSync(__dirname+'/files/'+data7.filename));
+			err="";
+			console.log("Read file "+data7.filename);
+		}catch{
+			err="Can't read file.";
+		}
+		socket.emit("wrClient",{"err":err,"filename":data7.filename});
+		try{
+			//вычислить ответ задачи file7 и послать клиенту
+			socket.emit("answerFile7Client",{"n":buf7.length,"a":buf7[0],"b":buf7[1],"c":buf7[buf7.length-2],"d":buf7[buf7.length-1]});
+		}catch{
+			err="Can't calculate file.";
+		}
+		socket.emit("wrClient",{"err":err,"filename":data7.filename});
+
+	});
+
 	// что делать при разъединении с браузером 
 	socket.on('disconnect', function() {
 		//console.log('user disconnected',n_disconnect++);
