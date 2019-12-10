@@ -100,6 +100,7 @@ ios.sockets.on('connection', function(socket) {
         console.log(data);
         socket.emit('eventClient', { "data": 'Hello Client! You send: ' + data });
     });
+
     socket.on("fnServer", function(data3) {
         console.log("Filename: " + data3);
         try {
@@ -111,6 +112,7 @@ ios.sockets.on('connection', function(socket) {
         }
         socket.emit("fnClient", { "err": err, "filename": data3, "data": buf });
     });
+
     socket.on("wrServer", function(data4) {
         console.log("Write file " + data4.filename);
         try {
@@ -121,6 +123,7 @@ ios.sockets.on('connection', function(socket) {
         }
         socket.emit("wrClient", { "err": err, "filename": data4.filename });
     });
+
     //задача file2 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
     socket.on("file2Server", function(data5) {
         console.log("Write file " + data5.filename);
@@ -138,6 +141,7 @@ ios.sockets.on('connection', function(socket) {
         }
         socket.emit("wrClient", { "err": err, "filename": data5.filename });
     });
+
     //задача file3 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
     socket.on("file3Server", function(data6) {
         console.log("Write file " + data6.filename);
@@ -184,7 +188,44 @@ ios.sockets.on('connection', function(socket) {
             err = "Can't calculate file.";
         }
         socket.emit("wrClient", { "err": err, "filename": data7.filename });
+    });
 
+    //задача file7 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
+    socket.on('file10Server', function(data10) {
+        //создать имя файла с инвертированным массивом , только если это файл JSON
+        var invFilename10 = data10.filename.replace('.json', 'inv.json');
+        console.log('Inverse file: ' + invFilename10);
+        try {
+            //создать массив случайных целых чисел и сохранить как файл JSON на сервере
+            fs.writeFileSync(__dirname + '/files/' + data10.filename, JSON.stringify(getRandomIntArr(getRandomInt(5, 50), -50, 50)));
+            err = "";
+        } catch {
+            err = "Can`t write file. ";
+        }
+        socket.emit("wrClient", { "err": err, "filename": data10.filename });
+        try {
+            //прочитать
+            var buf10 = JSON.parse(fs.readFileSync(__dirname + '/files/' + data10.filename));
+            err = "";
+        } catch {
+            err = "Can`t read file. ";
+        }
+        socket.emit("wrClient", { "err": err, "filename": data10.filename });
+        try {
+            //вычислить ответ
+            inv10 = [];
+            for (let i = 0; i < buf10.length; i++) {
+                inv10.push(buf10[buf10.length - 1 - i]);
+            }
+            //записать в новый файл
+            fs.writeFileSync(__dirname + '/files/' + invFilename10, JSON.stringify(inv10));
+            //послать ответ клиенту усли всё удачно
+            socket.emit("answer10Client", { "invFilename": invFilename10 });
+            err = "";
+        } catch {
+            err = "Can`t write file. ";
+        }
+        socket.emit("wrClient", { "err": err, "filename": invFilename10 });
     });
 
     // что делать при разъединении с браузером 
