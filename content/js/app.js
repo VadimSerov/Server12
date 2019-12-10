@@ -36,13 +36,17 @@ socket.on("fnClient", function(dann) {
 
 //Кнопка записать в файл
 btnfnwrite.onclick = function() {
-    socket.emit("wrServer", { "filename": filenamewrite.value, "data": txtar.value });
+    socket.emit("wrServer", {
+        "filename": filenamewrite.value,
+        "data": txtar.value
+    });
 }
 
 //ответ с сервера как прошла запись
 socket.on("wrClient", function(datt) {
     if (datt.err != "") {
-        t002.innerHTML += "Error: " + datt.err + " " + datt.filename + "<br>";
+        t002.innerHTML += "Error: " + datt.err +
+            " " + datt.filename + "<br>";
         sendinput.value = "";
     }
 });
@@ -50,29 +54,44 @@ socket.on("wrClient", function(datt) {
 //задача file2 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
 //решение на стороне сервера, бинарные файлы не использовать
 btnfile2.onclick = function() {
-    socket.emit("file2Server", { "n": Number(inpn.value), "filename": inpfilename.value });
+    socket.emit("file2Server", {
+        "n": Number(inpn.value),
+        "filename": inpfilename.value
+    });
 }
 
 //задача file3 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
 //решение на стороне сервера, бинарные файлы не использовать, 
 //обязательно использовать парсинг в JSON 
 btnfile3.onclick = function() {
-    socket.emit("file3Server", { "a": Number(inpa.value), "b": Number(inpb.value), "filename": inpfilename3.value });
+    socket.emit("file3Server", {
+        "a": Number(inpa.value),
+        "b": Number(inpb.value),
+        "filename": inpfilename3.value
+    });
 }
 
 //задача file7 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
 btnfile7.onclick = function() {
-    socket.emit("file7Server", { "filename": inpfilename7.value });
+    socket.emit("file7Server", {
+        "filename": inpfilename7.value
+    });
 }
 
 //вдруг с сервера пришел ответ на задачу file7
 socket.on("answerFile7Client", function(datt7) {
-    answerfile7.innerHTML = " n= " + datt7.n + " ; a= " + datt7.a + " ;  b= " + datt7.b + " ; c= " + datt7.c + " ; d= " + datt7.d;
+    answerfile7.innerHTML = " n= " + datt7.n +
+        " ; a= " + datt7.a +
+        " ; b= " + datt7.b +
+        " ; c= " + datt7.c +
+        " ; d= " + datt7.d;
 });
 
 //задача file10 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
 btnfile10.onclick = function() {
-    socket.emit("file10Server", { "filename": inpfilename10.value });
+    socket.emit("file10Server", {
+        "filename": inpfilename10.value
+    });
 }
 
 //вдруг с сервера пришел ответ на задачу file10
