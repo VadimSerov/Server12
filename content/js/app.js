@@ -98,3 +98,15 @@ btnfile10.onclick = function() {
 socket.on("answer10Client", function(datt10) {
     answerfile10.innerHTML = " Inverse file name: " + datt10.invFilename;
 });
+
+//задача file14 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
+btnfile14.onclick = function() {
+    socket.emit("file14Server", {
+        "filename": inpfilename14.value
+    });
+}
+
+//вдруг с сервера пришел ответ на задачу file10
+socket.on("answer14Client", function(datt14) {
+    answerfile14.innerHTML = " Average: " + datt14.avg;
+});
