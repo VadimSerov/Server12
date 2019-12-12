@@ -76,6 +76,7 @@ function getRandomFloatArr(n, min, max) {
     for (let i = 0; i < n; i++) {
         result.push(Math.random() * (max - min) + min);
     }
+    return result;
 }
 
 server.on('request', function(request, response) {
@@ -292,6 +293,36 @@ ios.sockets.on('connection', function(socket) {
             "err": err,
             "filename": invFilename10
         });
+    });
+
+    //задача file14 -- 1000 задач по программированию Часть II Абрамян М.Э. 2004 --
+    socket.on('file14Server', function(data14) {
+        try {
+            //создать массив случайных вещественных чисел (с плавающей точкой)
+            var buf = getRandomFloatArr(getRandomInt(10, 45), -100, 100);
+            //записать в файл на сервере
+            fs.writeFileSync(__dirname + '/files/' + data14.filename, JSON.stringify(buf));
+            err = "";
+        } catch {
+            err = "Can`t write file. ";
+        }
+        socket.emit("wrClient", {
+            "err": err,
+            "filename": data14.filename
+        });
+        //прочитать файл на сервере
+        try {
+            var buf14 = JSON.parse(fs.readFileSync(__dirname + '/files/' + data14.filename));
+            //решить задачу file14 и послать ответ клиенту
+            var avg = 0;
+            for (let i = 0; i < buf14.length; i++) {
+                avg += buf14[i] / buf14.length;
+            }
+            socket.emit('answer14Client', { "avg": avg });
+            err = "";
+        } catch {
+            err = "Can`t read file. ";
+        }
     });
 
     // что делать при разъединении с браузером 
