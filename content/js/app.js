@@ -108,5 +108,5 @@ btnfile14.onclick = function() {
 
 //вдруг с сервера пришел ответ на задачу file10
 socket.on("answer14Client", function(datt14) {
-    answerfile14.innerHTML = " Average: " + datt14.avg;
+    answerfile14.innerHTML = " Среднее арифметическое: " + datt14.avg;
 });
