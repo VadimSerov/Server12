@@ -80,7 +80,7 @@ function getRandomFloatArr(n, min, max) {
 }
 
 server.on('request', function(request, response) {
-    //console.log(request.url);
+    console.log(request.url);
     if (request.url == '/') {
         response.writeHead(200, { 'Content-Type': 'text/html' });
         fs.readFile(__dirname + '/content/html/index.html', function(err0, data0) {
@@ -109,6 +109,14 @@ server.on('request', function(request, response) {
             } else {
                 response.end(defs.css);
             }
+        });
+    }
+    if (request.url == '/bu.jpg') {
+        response.writeHead(200, { 'Content-Type': 'image/jpeg' });
+        fs.readFile(__dirname + '/content/image/bu.jpg', function(errj, dataj) {
+
+            response.end(dataj);
+
         });
     }
 });

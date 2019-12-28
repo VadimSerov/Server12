@@ -1,1 +1,1 @@
-"C:\Program Files\Google\Chrome\Application\chrome.exe" localhost 
+"C:/Portable/Cent/chrome.exe" localhost 
