@@ -2,7 +2,7 @@ const fs = require('fs');
 const server = require('http').createServer();
 const ios = require('socket.io').listen(server);
 
-var port = 80;
+var port = 3030;
 var host = 'localhost';
 
 const defs = {
@@ -114,6 +114,14 @@ server.on('request', function(request, response) {
     if (request.url == '/bu.jpg') {
         response.writeHead(200, { 'Content-Type': 'image/jpeg' });
         fs.readFile(__dirname + '/content/image/bu.jpg', function(errj, dataj) {
+
+            response.end(dataj);
+
+        });
+    }
+    if (request.url == '/be.jpg') {
+        response.writeHead(200, { 'Content-Type': 'image/jpeg' });
+        fs.readFile(__dirname + '/content/image/be.jpg', function(errj, dataj) {
 
             response.end(dataj);
 
